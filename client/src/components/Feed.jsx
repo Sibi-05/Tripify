@@ -24,6 +24,8 @@ const Feed = ({ trip, onDeleteTrip }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
 
+  const [currentIndex, setCurrentIndex] = useState(0);
+
   const togglePlay = () => {
     if (!videoRef.current) return;
 
@@ -35,6 +37,8 @@ const Feed = ({ trip, onDeleteTrip }) => {
       setIsPlaying(false);
     }
   };
+
+  const carouselRef = useRef(null);
 
   const toggleMute = () => {
     if (!videoRef.current) return;
@@ -109,6 +113,15 @@ const Feed = ({ trip, onDeleteTrip }) => {
     }
   };
 
+  const handleScroll = () => {
+    const container = carouselRef.current;
+
+    if (!container) return;
+
+    const index = Math.round(container.scrollLeft / container.clientWidth);
+    setCurrentIndex(index);
+  };
+
   return (
     <article className="bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-300 border border-gray-100 overflow-hidden w-full max-w-[600px] mx-auto">
       <header
@@ -181,7 +194,11 @@ const Feed = ({ trip, onDeleteTrip }) => {
 
       {trip?.media && trip.media.length > 0 && (
         <div className="relative group/carousel px-5 mb-3">
-          <div className="flex gap-2 overflow-x-auto snap-x snap-mandatory scrollbar-none rounded-xl w-full aspect-square bg-gray-50">
+          <div
+            ref={carouselRef}
+            onScroll={handleScroll}
+            className="flex overflow-x-auto snap-x snap-mandatory scrollbar-none rounded-xl w-full aspect-square bg-gray-50"
+          >
             {trip.media.map((item, index) => (
               <div
                 key={item?._id || index}
@@ -189,37 +206,37 @@ const Feed = ({ trip, onDeleteTrip }) => {
               >
                 {item?.mediaType === "video" ? (
                   <div className="relative w-full h-full">
-  <video
-    ref={videoRef}
-    src={item.url}
-    className="w-full h-full object-cover cursor-pointer"
-    muted={isMuted}
-    playsInline
-    onClick={togglePlay}
-  />
+                    <video
+                      ref={videoRef}
+                      src={item.url}
+                      className="w-full h-full object-cover cursor-pointer"
+                      muted={isMuted}
+                      playsInline
+                      onClick={togglePlay}
+                    />
 
-  {!isPlaying && (
-    <button
-      onClick={togglePlay}
-      className="absolute inset-0 flex items-center justify-center"
-    >
-      <div className="w-16 h-16 rounded-full bg-black/50 backdrop-blur-md flex items-center justify-center text-white">
-        <FaPlay className="text-3xl ml-1" />
-      </div>
-    </button>
-  )}
+                    {!isPlaying && (
+                      <button
+                        onClick={togglePlay}
+                        className="absolute inset-0 flex items-center justify-center"
+                      >
+                        <div className="w-16 h-16 rounded-full bg-black/50 backdrop-blur-md flex items-center justify-center text-white">
+                          <FaPlay className="text-3xl ml-1" />
+                        </div>
+                      </button>
+                    )}
 
-  <button
-    onClick={toggleMute}
-    className="absolute bottom-4 right-4 w-10 h-10 rounded-full bg-black/50 backdrop-blur-md flex items-center justify-center text-white hover:bg-black/70 transition-all"
-  >
-    {isMuted ? (
-      <FaVolumeMute className="text-lg" />
-    ) : (
-      <FaVolumeUp className="text-lg" />
-    )}
-  </button>
-</div>
+                    <button
+                      onClick={toggleMute}
+                      className="absolute bottom-4 right-4 w-10 h-10 rounded-full bg-black/50 backdrop-blur-md flex items-center justify-center text-white hover:bg-black/70 transition-all"
+                    >
+                      {isMuted ? (
+                        <FaVolumeMute className="text-lg" />
+                      ) : (
+                        <FaVolumeUp className="text-lg" />
+                      )}
+                    </button>
+                  </div>
                 ) : (
                   <img
                     src={item.url}
@@ -234,7 +251,7 @@ const Feed = ({ trip, onDeleteTrip }) => {
 
           {trip.media.length > 1 && (
             <div className="absolute top-3 right-8 bg-slate-900/75 backdrop-blur-sm text-white px-2.5 py-1 text-[11px] font-semibold rounded-full pointer-events-none shadow-sm tracking-wider">
-              1 / {trip.media.length}
+              {currentIndex + 1} / {trip.media.length}
             </div>
           )}
         </div>
