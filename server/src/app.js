@@ -12,7 +12,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: "https://tripify-web.netlify.app/",
+    origin: "https://tripify-web.netlify.app",
     credentials: true,
   })
 );
