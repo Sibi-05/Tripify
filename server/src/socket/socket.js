@@ -6,7 +6,7 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: "https://tripify-web.netlify.app",
+    origin: "https://tripify-web.netlify.app/",
     methods: ["GET", "POST", "PATCH", "DELETE"],
     credentials: true,
   },
