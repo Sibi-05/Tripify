@@ -1,6 +1,5 @@
 import express from "express";
 import cors from "cors";
-import cookieParser from "cookie-parser";
 
 import router from "./routes/userRoutes.js";
 import tripRouter from "./routes/tripRoutes.js";
@@ -20,7 +19,6 @@ app.use(
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser());
 
 app.use("/api/users", router);
 app.use("/api/trips", tripRouter);
