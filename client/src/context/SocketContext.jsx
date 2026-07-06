@@ -17,7 +17,7 @@ export const SocketProvider = ({ children }) => {
     if (currentUser?._id || currentUser?.id) {
       const targetUserId = currentUser?._id || currentUser?.id;
 
-      socketInstance = io("http://localhost:5001", {
+      socketInstance = io("https://tripify-zjdb.onrender.com", {
         query: { userId: targetUserId },
         withCredentials: true,
         transports: ["websocket"],
