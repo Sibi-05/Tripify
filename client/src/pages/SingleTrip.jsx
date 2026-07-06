@@ -26,13 +26,11 @@ const SingleTrip = () => {
     try {
     const response = await axios.get(
       `${import.meta.env.VITE_API_URL}/comments/${id}`,
-      { comment },
       {
         withCredentials: true,
         headers: { Authorization: `Bearer ${token}` },
       }
     );
-    console.log(response.data)
     
     setComments(response?.data);
   } catch (error) {
@@ -51,7 +49,6 @@ const SingleTrip = () => {
         }
       );
       setTrip(response?.data);
-      setComments(response?.data?.comments || []);
     } catch (error) {
       console.log(error.message);
     } finally {
